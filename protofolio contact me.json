@@ -1,0 +1,248 @@
+{
+  "name": "protofolio contact me",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "1880b9f6-fbed-458b-8f15-c8b3ccaf83ee",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "5ee6cc62-2421-480f-ab0b-3e11fc9305b6",
+      "name": "Webhook",
+      "webhookId": "1880b9f6-fbed-458b-8f15-c8b3ccaf83ee"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1ABDqYIapbJgXfhhhMdFJ10VW_cvK-PfnfGatCXuNFXc",
+          "mode": "list",
+          "cachedResultName": "profile",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ABDqYIapbJgXfhhhMdFJ10VW_cvK-PfnfGatCXuNFXc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "contact us",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ABDqYIapbJgXfhhhMdFJ10VW_cvK-PfnfGatCXuNFXc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.body.name }}",
+            "Email": "={{ $json.body.email }}",
+            "Mobile number": "={{ $json.body.mobile }}",
+            "Query": "={{ $json.body.message }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Mobile number",
+              "displayName": "Mobile number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Query",
+              "displayName": "Query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "49220e2b-982b-4db1-8d63-abaf1dbfba3b",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "t6LdducfrFyzu35g",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "={{ $json.Query }}"
+            },
+            {
+              "content": "Act as a professional AI assistant representing Kolluru Anudeepika.\n\nRole:\nYou are an AI-powered contact assistant embedded in a personal developer portfolio.\nYou must respond on behalf of Kolluru Anudeepika in a polite, friendly, and professional tone.\n\nPersona Details:\nName: Kolluru Anudeepika\nEducation:\n- B.Tech Computer Science and Engineering\n- JNTUH College of Engineering Hyderabad\n- CGPA: 8.85\n\nSkills:\n- Programming: C, Python, Java\n- Web Technologies: HTML, CSS\n- Database: SQL\n- Machine Learning, API development, automation\n\nProjects:\n1. AI-Based Expense Tracker\n   - OCR using Tesseract\n   - Dialogflow chatbot\n   - ML-based expense categorization\n   - Real-time dashboards\n   - Group expense tracking and authentication\n\n2. Random Graph Traversal Visualizer\n   - DFS and BFS visualization\n   - Random graph generation\n   - Animated step-by-step traversal\n   - HTML, CSS, JavaScript, Python, Bootstrap\n\n3. Loan Approval Prediction System\n   - ML model using Scikit-learn\n   - Data preprocessing and evaluation\n   - Deployed using FastAPI REST APIs\n\nSoft Skills:\n- Communication\n- Adaptability\n- Flexibility\n\nBehavior Rules:\n- Answer questions as if you are Kolluru Anudeepika\n- Be confident but humble\n- Keep responses concise and friendly\n- If the question is about hiring or collaboration, suggest contacting via email\n\nContact Information (share only when relevant):\n- Email: kolluruanudeepika1304@gmail.com\n- GitHub: https://github.com/AnudeepikaKolluru\n\nConstraints:\n- Do not invent experience not listed\n- Do not mention you are an AI\n- Do not provide personal data unless asked\n- If a question is unclear, ask politely for clarification\n\nOutput:\n- Respond with a natural, human-like reply\n- Use first-person responses (e.g., \"I have worked on…\")\n"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "textFormat": {
+            "textOptions": {
+              "type": "text"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        416,
+        0
+      ],
+      "id": "1903806a-09c0-4918-9fcd-a8780c980d60",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "Mh2ofM2iilVie5ow",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Append row in sheet').item.json.Email }}",
+        "subject": "Thank you for reaching out.",
+        "emailType": "text",
+        "message": "=Hi {{ $('Append row in sheet').item.json.Name }} ,  Thank you for your message! 😊\n{{ $json.output[0].content[0].text }}\nIf your message is about opportunities or collaboration, feel free to reach out to me directly at\nkolluruanudeepika1304@gmail.com.\n\nHave a great day!\nBest regards, \nKolluru Anudeepika",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        768,
+        0
+      ],
+      "id": "57b9d70a-a421-4eec-9b6d-95ce13097608",
+      "name": "Send a message",
+      "webhookId": "cd4cfbed-0339-4c04-9ee1-63301c39b84b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "TMUA5baa6qCuRWwz",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $('Message a model').item.json.output[0].content[0].text }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        976,
+        0
+      ],
+      "id": "6614bcf6-5835-4ba1-b346-9ae1bc18f473",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "eb5d740a-c667-4495-a32e-99baa3eaa993",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "cf9181f4f39bb775d50d12999cd876c670df572b2a347d53bda2d16c8bcd50f8"
+  },
+  "id": "rtjnMkV1GAU6DEO5Fzulz",
+  "tags": []
+}

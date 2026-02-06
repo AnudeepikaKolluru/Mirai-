@@ -1,0 +1,367 @@
+{
+  "name": "Dr strange appointments",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hi there! 👋\nThis is Dr. Strange's Clinic. How can I assist you today?",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "f10066c1-f5e7-455e-ba53-7b2a3b83aed1",
+      "name": "When chat message received",
+      "webhookId": "09352eb2-1561-4fe7-9710-c3c2a1e51273"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=#Role\nYou are a smart and helpful receptionist agent for Dr. Strange Physiotherapy Clinic.\n\n#How to Behave / What to Do\nGreet the patient with the message, “Welcome to Dr Strange’s Clinic. How can I help you?” only once at the beginning of a chat session.\n\nHandle patient requests to schedule appointments with Dr. Strange.\nBefore confirming any appointment, ask the patient for required details:\n\nPatient name\n\nPhone number\n\nEmail address\n\nReason for appointment\n\nCheck if the patient already exists in the database.\n\nIf the patient does not exist, collect and store all patient details.\n\nIf the patient already exists, ask for all details except the reason for appointment and update the existing record.\nCheck free slots in Dr. Strange’s calendar using the available tools.\n\nSuggest suitable available time slots for the requested date.\n\nBlock the calendar once the patient confirms a slot.\n\nUpdate the confirmed appointment details in Google Sheets.\n\nSend a confirmation email to the patient with complete appointment details.\n\n\n#Tools Available\nget events:\n\nCheck existing events in the calendar.\n\nIdentify available time slots.\n\ncreate new events:\n\nBlock the confirmed appointment slot in the calendar.\n\nupdate google sheets:\n\nStore appointment details after confirmation.\n\nsend mail:\n\nSend appointment confirmation emails to patients.\n\n#Tone\n\nBe professional.\n\nBe polite.\n\nBe caring.\n\n#Important Information\n\nCurrent date and time: {{ $now }}\n\nClinic working hours: 9:00 AM to 5:00 PM.\n\nReject requests before 9:00 AM or after 5:00 PM and ask the patient to choose another day.\n\nDo not allow appointments on Saturdays, Sundays, or public holidays.\n\nDo not allow appointments between 1:00 PM and 2:00 PM (doctor’s lunch break).\n\nEach appointment must be exactly 30 minutes.\n\nDo not block more than 30 minutes for any appointment.\n\n#Edge Case Handling:\n\nIf no slots are available on the requested date, suggest alternative dates.\n\nReject booking requests outside working hours, during lunch time, or on non-working days.\n\nDo not allow bookings for past dates.\n\nPrevent double booking by rechecking availability before confirmation.\n\nEnsure all required patient details are collected before booking.\nPrevent double booking by rechecking availability before confirmation.\n\nDo not confirm any appointment until required patient details are collected.\n\nEnsure patient privacy by never exposing other patients’ names, contact details, or appointment information.\n\n\nIf any tool fails (calendar, email, or Google Sheets), inform the patient politely and retry or ask them to try again later."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        144,
+        0
+      ],
+      "id": "7631eef4-194d-4d46-adcf-bef412793591",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        32,
+        192
+      ],
+      "id": "50744af6-9b67-44c3-8fdf-2ce5f919d53e",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "Mh2ofM2iilVie5ow",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        160,
+        224
+      ],
+      "id": "a1917c5b-4d97-4186-b6aa-fde963deffef",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "kolluruanudeepika1304@gmail.com",
+          "mode": "list",
+          "cachedResultName": "kolluruanudeepika1304@gmail.com"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+        "additionalFields": {
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        304,
+        192
+      ],
+      "id": "7196def3-f8b1-44dd-b0a8-43402959f5f9",
+      "name": "Create new events",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "g68GE8DklgjmC3L2",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "kolluruanudeepika1304@gmail.com",
+          "mode": "list",
+          "cachedResultName": "kolluruanudeepika1304@gmail.com"
+        },
+        "returnAll": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Return_All', ``, 'boolean') }}",
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('After', ``, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Before', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        400,
+        208
+      ],
+      "id": "a4624bfe-a5a8-45b3-9d85-fc6ec078c4d1",
+      "name": "get events",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "g68GE8DklgjmC3L2",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "emailType": "text",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        624,
+        176
+      ],
+      "id": "50e3583f-5649-42fb-b760-20bd28a7c028",
+      "name": "Send mail",
+      "webhookId": "cb8a5c03-2248-459b-baaa-3731e19c1d28",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "TMUA5baa6qCuRWwz",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1TUoMrY0qMIogy6ZYUabZHIQmjenp9JmWHj90Jl3GntA",
+          "mode": "list",
+          "cachedResultName": "patient database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1TUoMrY0qMIogy6ZYUabZHIQmjenp9JmWHj90Jl3GntA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1TUoMrY0qMIogy6ZYUabZHIQmjenp9JmWHj90Jl3GntA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Name', ``, 'string') }}",
+            "Age": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Age', ``, 'string') }}",
+            "Gender": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Gender', ``, 'string') }}",
+            "Symptoms": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Symptoms', ``, 'string') }}",
+            "Prescription": "=",
+            "Contact number": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Contact_number', ``, 'string') }}",
+            "Email": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Email', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Age",
+              "displayName": "Age",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Gender",
+              "displayName": "Gender",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Symptoms",
+              "displayName": "Symptoms",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Prescription",
+              "displayName": "Prescription",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Contact number",
+              "displayName": "Contact number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        512,
+        192
+      ],
+      "id": "86849d1f-aaca-4d69-8aa6-4df5b5936fa8",
+      "name": "update google sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "t6LdducfrFyzu35g",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create new events": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get events": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send mail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update google sheet": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "2e484a72-9f11-4e36-a281-9eb290a42f73",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "cf9181f4f39bb775d50d12999cd876c670df572b2a347d53bda2d16c8bcd50f8"
+  },
+  "id": "wr7r1sATmeVxvOPj9c44F",
+  "tags": []
+}

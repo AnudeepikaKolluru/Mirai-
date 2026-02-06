@@ -1,0 +1,225 @@
+{
+  "name": "book seller form",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "AD Book Seller-Order Request Form",
+        "formDescription": "Please fill in the following details to place your book request.\nOnce you submit the form, your request will be recorded and a confirmation email will be sent to your email address to acknowledge that we have received your order request",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name"
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email"
+            },
+            {
+              "fieldLabel": "Book Title"
+            },
+            {
+              "fieldLabel": "Author"
+            },
+            {
+              "fieldLabel": "Quantity",
+              "fieldType": "number"
+            },
+            {
+              "fieldLabel": "Address"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "2245bedb-ac99-467c-8ff0-ae4d0b40f79c",
+      "name": "On form submission",
+      "webhookId": "b37a8e8f-d749-4006-a87c-f991d4612f14"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.EMAIL }}",
+        "subject": "Book Order Request Received-AD Book Sellers",
+        "emailType": "text",
+        "message": "=Hi {{ $json.NAME }} , \nThank you for placing your book order with us!  We’re happy to let you know that we’ve received your request for: \nBook Title: {{ $json['BOOK TITLE'] }} \nOur team is checking availability and will \nupdate you shortly. Once confirmed, your \nbook will be delivered within 5 working \ndays.If you have any questions or need help, just reply to this email—we’re always happy \nto help!.Thanks again for choosing our \nbookstore.\nHappy reading .\nWarm regards,\nAD Book Sellers",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "3f632446-5252-4ff1-a5a4-5ab8e7f89527",
+      "name": "Send a message",
+      "webhookId": "c475e02e-ba84-4aea-b1c6-90456e95a7cf",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "TMUA5baa6qCuRWwz",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1BLUXZfRSANIlhWxnDcuOqEh4CDXWcCAR7O8e_QuHVaQ",
+          "mode": "list",
+          "cachedResultName": "Books Order request database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1BLUXZfRSANIlhWxnDcuOqEh4CDXWcCAR7O8e_QuHVaQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Details",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1BLUXZfRSANIlhWxnDcuOqEh4CDXWcCAR7O8e_QuHVaQ/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "NAME": "={{ $json.Name }}",
+            "EMAIL": "={{ $json.Email }}",
+            "BOOK TITLE": "={{ $json['Book Title'] }}",
+            "AUTHOR": "={{ $json.Author }}",
+            "QUANTITY": "={{ $json.Quantity }}",
+            "ADDRESS": "={{ $json.Address }}",
+            "SUBMITTED AT": "={{ $json.submittedAt }}"
+          },
+          "matchingColumns": [
+            "NAME"
+          ],
+          "schema": [
+            {
+              "id": "NAME",
+              "displayName": "NAME",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "EMAIL",
+              "displayName": "EMAIL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "BOOK TITLE",
+              "displayName": "BOOK TITLE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AUTHOR",
+              "displayName": "AUTHOR",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "QUANTITY",
+              "displayName": "QUANTITY",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ADDRESS",
+              "displayName": "ADDRESS",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "SUBMITTED AT",
+              "displayName": "SUBMITTED AT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "1a4f1e0e-bf20-43d5-a077-81870f61715d",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "t6LdducfrFyzu35g",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "f4ff1c80-5653-42d6-b78b-339be295b0f3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "cf9181f4f39bb775d50d12999cd876c670df572b2a347d53bda2d16c8bcd50f8"
+  },
+  "id": "K6Z77zXzlE6vagaNVqPnu",
+  "tags": []
+}

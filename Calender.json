@@ -1,0 +1,164 @@
+{
+  "name": "Calender",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e1e284b9-b39f-47c5-aba0-58a63c725134",
+      "name": "When chat message received",
+      "webhookId": "b0c8e751-f937-428e-9fec-fc34d68be3ea",
+      "alwaysOutputData": false,
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=#Role\nyou are google calender scheduling ai agent that helps to add, get, update or delete the calender events.\n\n#Task\nyour responsibility is to undersrand natural language scheduling requests and convert them into structured calendar event data that can be executed using calender tools.\n\n#Tools available\n-create new events: use this tool when a new event has to be created\n\n#important note\n-current date and time: \n{{ $now}}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "895427f8-afd7-4b5e-80ec-de7fbb50f676",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        80,
+        208
+      ],
+      "id": "7b70727d-3117-4695-8d9d-7fc9417cabc4",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "Mh2ofM2iilVie5ow",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        208
+      ],
+      "id": "79490b16-1df3-4d7f-9e3b-5f7b5f069de7",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "kolluruanudeepika1304@gmail.com",
+          "mode": "list",
+          "cachedResultName": "kolluruanudeepika1304@gmail.com"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+        "additionalFields": {
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        368,
+        208
+      ],
+      "id": "eed128d8-480b-49f1-8287-64ccbbd4e2ff",
+      "name": "Create new events",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "g68GE8DklgjmC3L2",
+          "name": "Google Calendar account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create new events": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "a17b6b3e-8bb8-4f2e-94e4-44aea6d26e20",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "cf9181f4f39bb775d50d12999cd876c670df572b2a347d53bda2d16c8bcd50f8"
+  },
+  "id": "s95lbAmE2gZefUqA7so0e",
+  "tags": []
+}
