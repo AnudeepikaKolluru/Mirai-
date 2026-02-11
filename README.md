@@ -1,10 +1,12 @@
+Here is your **complete updated README content** including the SpaceExploration workflow section, formatted consistently and without emojis:
 
-# n8n Automation Workflows 
+---
+
+# n8n Automation Workflows
 
 This repository contains multiple **n8n workflows** developed as part of assignments and practical projects. These workflows demonstrate automation using webhooks, Telegram bots, Google Sheets, Google Calendar, email services, AI agents, and LLMs, along with frontend integrations using Lovable Dev.
 
 ---
-
 
 Each `.json` file is an exported n8n workflow and can be imported directly into n8n.
 
@@ -130,12 +132,47 @@ Implements a Retrieval-Augmented Generation (RAG) pipeline using an LLM.
 
 ---
 
+### 7. SpaceExploration – Automated Space Photo Workflow
+
+**Workflow File**
+`space_exploration.json`
+
+**Description**
+An automated workflow that sends a space-related image to all subscribers at a fixed scheduled time every day without manual intervention.
+
+**Workflow Steps**
+
+1. Triggered automatically using a Cron node at a fixed time daily
+2. Fetches a space image from NASA APOD API
+3. Extracts image URL, title, and description
+4. Retrieves all subscriber emails from Google Sheets or database
+5. Sends formatted email with image and details to all subscribers
+6. Logs execution status
+
+**Capabilities**
+
+* Fully automated daily execution
+* Valid and trusted image source (NASA APOD API)
+* Bulk email delivery to subscribers
+* No manual triggering required
+* Can be extended to Telegram or other messaging platforms
+
+**Scheduling Example**
+
+```
+0 9 * * *
+```
+
+Runs every day at 9:00 AM.
+
+---
+
 ## How to Use
 
 1. Clone or download this repository
 2. Open n8n
 3. Import the required `.json` workflow file
-4. Configure credentials (Google Sheets, Google Calendar, Email, Telegram, LLM)
+4. Configure credentials (Google Sheets, Google Calendar, Email, Telegram, LLM, NASA API)
 5. Activate or publish the workflow as required
 
 ---
@@ -144,7 +181,7 @@ Implements a Retrieval-Augmented Generation (RAG) pipeline using an LLM.
 
 * Telegram Trigger workflows must be unpublished to test manually in n8n
 * Production URLs are used for webhook-based workflows
+* Cron-based workflows run automatically once activated
 * All workflows are tested with multiple scenarios and edge cases
 
 ---
-
